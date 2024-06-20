@@ -1,9 +1,14 @@
 package com.yb.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.yb.util.CommonResult;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 接受安卓推送的手术信息
@@ -11,9 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date 2024/6/20 15:56
  */
 @Slf4j
+@Api(tags = "接受安卓推送的手术信息")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/operation")
 public class OperationInfoController {
+
+
+    @ApiOperation("手术信息")
+    @PostMapping("/info")
+    public CommonResult<JSONObject> education(@RequestBody JSONObject jsonObject) {
+        log.info("手术信息jsonObject==:{}",jsonObject);
+        return CommonResult.data(jsonObject);
+    }
+
 
 }
