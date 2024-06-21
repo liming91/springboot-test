@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.yb.exception.ServiceException;
+import com.yb.service.PatientInfoService;
 import com.yb.util.CommonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,15 +26,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/operation")
 public class OperationInfoController {
 
+    private final PatientInfoService patientInfoService;
 
-    @ApiOperation("手术信息")
+
+    @ApiOperation("手术信息入库")
     @PostMapping("/info")
     public CommonResult<JSONObject> education(@RequestBody JSONObject jsonObject) {
         log.info("手术信息jsonObject==:{}", jsonObject);
         if (ObjectUtil.isEmpty(jsonObject)) {
-            throw new ServiceException("手术信息异常!");
+            throw new ServiceException("参数异常!");
         }
-        return CommonResult.data(jsonObject);
+        int rows = patientInfoService.insertPatientInfo(jsonObject);
+        if (rows != 0) {
+            return CommonResult.ok();
+        } else {
+            return CommonResult.error();
+        }
     }
 
 

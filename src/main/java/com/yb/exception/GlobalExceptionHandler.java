@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +20,7 @@ import java.util.Objects;
  * 全局异常处理
  */
 @Slf4j
-@ControllerAdvice
-@ResponseBody
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
@@ -54,6 +54,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {ServiceException.class})
     public CommonResult<?> serviceExceptionHandler(HttpServletRequest request, ServiceException serviceException) {
         CommonResult<?> message = new CommonResult<>(serviceException.getCode(), serviceException.getMsg(), null);
+        log.error("exception message",serviceException);
         log.error("业务异常={},接口响应={}", request.getRequestURL(), JSON.toJSONString(message));
         return message;
     }
