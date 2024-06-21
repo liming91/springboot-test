@@ -6,14 +6,16 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import lombok.Data;
 
 /**
- * 
  * @TableName patient_question
  */
-@TableName(value ="patient_question")
+@TableName(value = "patient_question", autoResultMap = true)
 @Data
 public class PatientQuestion implements Serializable {
     /**
@@ -30,16 +32,19 @@ public class PatientQuestion implements Serializable {
     /**
      * 麻醉医生问题
      */
+    @TableField(typeHandler = FastjsonTypeHandler.class)
     private JSONArray anaesthesiaQuestion;
 
     /**
      * 手术医生问题
      */
+    @TableField(typeHandler = FastjsonTypeHandler.class)
     private JSONArray operationQuestion;
 
     /**
      * 巡回护士问题
      */
+    @TableField(typeHandler = FastjsonTypeHandler.class)
     private JSONArray itinerantNurseQuestion;
 
     @TableField(exist = false)
