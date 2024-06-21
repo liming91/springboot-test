@@ -30,8 +30,8 @@ public class OperationInfoController {
     @PostMapping("/info")
     public CommonResult<JSONObject> education(@RequestBody JSONObject jsonObject) {
         log.info("手术信息jsonObject==:{}", jsonObject);
-        if (ObjectUtil.isNotEmpty(jsonObject)) {
-            throw new ServiceException("手术信息异常");
+        if (ObjectUtil.isEmpty(jsonObject)) {
+            throw new ServiceException("手术信息异常!");
         }
         return CommonResult.data(jsonObject);
     }
