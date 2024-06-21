@@ -3,9 +3,12 @@ package com.yb.service.impl;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yb.entity.PatientInfo;
 import com.yb.entity.PatientQuestion;
+import com.yb.entity.query.PatientInfoQuery;
+import com.yb.entity.vo.PatientInfoVo;
 import com.yb.exception.ServiceException;
 import com.yb.service.PatientInfoService;
 import com.yb.mapper.PatientInfoMapper;
@@ -13,8 +16,11 @@ import com.yb.service.PatientQuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Y
@@ -53,21 +59,30 @@ public class PatientInfoServiceImpl extends ServiceImpl<PatientInfoMapper, Patie
             patientInfo.setDepartment(department);
             patientInfo.setCheckTime(checkTime);
             patientInfo.setCreateTime(new Date());
-
             rows = this.baseMapper.insert(patientInfo);
 
-            //TODO 问题数据入库
+            //问题数据入库
             JSONObject question = jsonObject.getJSONObject("question");
-            JSONObject csq = question.getJSONObject("hzcsq");
+            JSONObject ssksq = question.getJSONObject("ssksq");//手术开始前
+            JSONObject mzssq = question.getJSONObject("mzssq");//麻醉实施前
+            JSONObject hzcsq = question.getJSONObject("hzcsq");//患者出手术室前
+
             PatientQuestion patientQuestion = new PatientQuestion();
             patientQuestion.setPatientId(id);
-            patientQuestion.setAnaesthesiaQuestion(csq.getJSONArray("mzysQuestion"));
-            patientQuestion.setOperationQuestion(csq.getJSONArray("ssysQuestion"));
-            patientQuestion.setItinerantNurseQuestion(csq.getJSONArray("xhhsQuestion"));
+            patientQuestion.setBeforeSurgeryQuestion(ssksq);
+            patientQuestion.setNarcotismQuestion(mzssq);
+            patientQuestion.setLeaveRoomQuestion(hzcsq);
+
+            //问题的医生
+            JSONObject signUser = jsonObject.getJSONObject("signUser");
+            patientQuestion.setBeforeSurgeryDoctor(signUser.getJSONObject("ssksq"));
+            patientQuestion.setNarcotismDoctor(signUser.getJSONObject("mzssq"));
+            patientQuestion.setLeaveRoomDoctor(signUser.getJSONObject("hzcsq"));
+            patientQuestion.setCreateTime(new Date());
             patientQuestionService.save(patientQuestion);
 
         } catch (Exception e) {
-            log.error("exception message", e);
+            log.error("手术信息异常:", e);
             throw new ServiceException("安卓患者信息入库异常");
         }
 
@@ -75,6 +90,19 @@ public class PatientInfoServiceImpl extends ServiceImpl<PatientInfoMapper, Patie
     }
 
 
+    @Override
+    public List<PatientInfoVo> getPatientInfo(PatientInfoQuery patientInfoQuery) {
+        List<PatientInfoVo> patientInfo = this.baseMapper.getPatientInfo(patientInfoQuery);
+        List<PatientInfoVo> collect = patientInfo.stream().distinct().collect(Collectors.toList());
+        if(!CollectionUtils.isEmpty(collect)){
+            collect.forEach(x->{
+                PatientQuestion patientQuestion = patientQuestionService.getOne(new LambdaQueryWrapper<PatientQuestion>()
+                        .eq(PatientQuestion::getPatientId, x.getPatientId()));
+                x.setPatientQuestion(patientQuestion);
+            });
+        }
+        return collect;
+    }
 }
 
 

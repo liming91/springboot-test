@@ -1,32 +1,33 @@
-package com.yb.entity;
+package com.yb.entity.vo;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
+import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.yb.entity.PatientQuestion;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
- * 患者信息
- * @TableName patient_info
+ * @Author liming
+ * @Date 2024/6/21 15:58
  */
-@TableName(value ="patient_info")
 @Data
-public class PatientInfo implements Serializable {
+@TableName( autoResultMap = true)
+@ApiModel(value = "患者信息")
+public class PatientInfoVo {
 
-    private static final long serialVersionUID = 3734860732252956804L;
-
-    /**
-     * 主键
-     */
-    @TableId(type = IdType.AUTO)
+    @ApiModelProperty(value = "主键")
     private Long id;
 
-    /**
-     * 患者id
-     */
+    @ApiModelProperty(value = "患者id")
     private Long patientId;
 
     /**
@@ -53,6 +54,7 @@ public class PatientInfo implements Serializable {
     /**
      * 手术时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date surgicalTime;
 
     /**
@@ -65,9 +67,8 @@ public class PatientInfo implements Serializable {
      */
     private String checkTime;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
+
+    private PatientQuestion patientQuestion;
+
 
 }

@@ -1,8 +1,10 @@
 package com.yb.controller;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.yb.entity.PatientInfo;
+import com.yb.entity.query.PatientInfoQuery;
+import com.yb.entity.vo.PatientInfoVo;
 import com.yb.exception.ServiceException;
 import com.yb.service.PatientInfoService;
 import com.yb.util.CommonResult;
@@ -11,6 +13,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -31,7 +35,7 @@ public class OperationInfoController {
 
     @ApiOperation("手术信息入库")
     @PostMapping("/info")
-    public CommonResult<JSONObject> education(@RequestBody JSONObject jsonObject) {
+    public CommonResult<JSONObject> insertPatientInfo(@RequestBody JSONObject jsonObject) {
         log.info("手术信息jsonObject==:{}", jsonObject);
         if (ObjectUtil.isEmpty(jsonObject)) {
             throw new ServiceException("参数异常!");
@@ -42,6 +46,13 @@ public class OperationInfoController {
         } else {
             return CommonResult.error();
         }
+    }
+
+    @ApiOperation("列表")
+    @GetMapping("/getPatientInfo")
+    public CommonResult<List<PatientInfoVo>> getPatientInfo(PatientInfoQuery patientInfoQuery) {
+        List<PatientInfoVo> list = patientInfoService.getPatientInfo(patientInfoQuery);
+        return CommonResult.data(list);
     }
 
 
