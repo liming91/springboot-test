@@ -64,9 +64,10 @@ public class PatientInfoServiceImpl extends ServiceImpl<PatientInfoMapper, Patie
             patientQuestion.setAnaesthesiaQuestion(csq.getJSONArray("mzysQuestion"));
             patientQuestion.setOperationQuestion(csq.getJSONArray("ssysQuestion"));
             patientQuestion.setItinerantNurseQuestion(csq.getJSONArray("xhhsQuestion"));
-            boolean flag = patientQuestionService.save(patientQuestion);
+            patientQuestionService.save(patientQuestion);
 
         } catch (Exception e) {
+            log.error("exception message", e);
             throw new ServiceException("安卓患者信息入库异常");
         }
 

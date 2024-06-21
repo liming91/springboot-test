@@ -54,7 +54,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {ServiceException.class})
     public CommonResult<?> serviceExceptionHandler(HttpServletRequest request, ServiceException serviceException) {
         CommonResult<?> message = new CommonResult<>(serviceException.getCode(), serviceException.getMsg(), null);
-        log.error("exception message",serviceException);
         log.error("业务异常={},接口响应={}", request.getRequestURL(), JSON.toJSONString(message));
         return message;
     }
