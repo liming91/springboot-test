@@ -12,6 +12,7 @@ import com.yb.entity.PatientQuestion;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -54,7 +55,7 @@ public class PatientInfoVo {
     /**
      * 手术时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date surgicalTime;
 
     /**
@@ -69,6 +70,7 @@ public class PatientInfoVo {
 
 
     private PatientQuestion patientQuestion;
+
 
 
 }
