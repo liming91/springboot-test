@@ -32,44 +32,12 @@ public class PatientQuestion implements Serializable {
      */
     private Long patientId;
 
-    /**
-     * 手术开始前问题
-     */
-    @TableField(typeHandler = FastjsonTypeHandler.class)
-    private JSONObject beforeSurgeryQuestion;
 
     /**
-     * 麻醉实施前问题
+     * 问题
      */
     @TableField(typeHandler = FastjsonTypeHandler.class)
-    private JSONObject narcotismQuestion;
-
-
-    /**
-     * 患者离开手术室前的问题
-     */
-    @TableField(typeHandler = FastjsonTypeHandler.class)
-    private JSONObject leaveRoomQuestion;
-
-    /**
-     * 手术开始前的医生
-     */
-    @TableField(typeHandler = FastjsonTypeHandler.class)
-    private JSONObject beforeSurgeryDoctor;
-
-
-    /**
-     * 麻醉实施医生
-     */
-    @TableField(typeHandler = FastjsonTypeHandler.class)
-    private JSONObject narcotismDoctor;
-
-
-    /**
-     * 患者离开手术室前的医生
-     */
-    @TableField(typeHandler = FastjsonTypeHandler.class)
-    private JSONObject leaveRoomDoctor;
+    private JSONObject question;
 
     /**
      * 创建时间

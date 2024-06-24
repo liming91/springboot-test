@@ -62,22 +62,9 @@ public class PatientInfoServiceImpl extends ServiceImpl<PatientInfoMapper, Patie
             rows = this.baseMapper.insert(patientInfo);
 
             //问题数据入库
-            JSONObject question = jsonObject.getJSONObject("question");
-            JSONObject ssksq = question.getJSONObject("ssksq");//手术开始前
-            JSONObject mzssq = question.getJSONObject("mzssq");//麻醉实施前
-            JSONObject hzcsq = question.getJSONObject("hzcsq");//患者出手术室前
-
             PatientQuestion patientQuestion = new PatientQuestion();
             patientQuestion.setPatientId(id);
-            patientQuestion.setBeforeSurgeryQuestion(ssksq);
-            patientQuestion.setNarcotismQuestion(mzssq);
-            patientQuestion.setLeaveRoomQuestion(hzcsq);
-
-            //问题的医生
-            JSONObject signUser = jsonObject.getJSONObject("signUser");
-            patientQuestion.setBeforeSurgeryDoctor(signUser.getJSONObject("ssksq"));
-            patientQuestion.setNarcotismDoctor(signUser.getJSONObject("mzssq"));
-            patientQuestion.setLeaveRoomDoctor(signUser.getJSONObject("hzcsq"));
+            patientQuestion.setQuestion(jsonObject);
             patientQuestion.setCreateTime(new Date());
             patientQuestionService.save(patientQuestion);
 
