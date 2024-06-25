@@ -2,31 +2,20 @@ package com.yb.exception;
 
 
 import com.yb.enums.CommonExceptionEnum;
+import lombok.Getter;
 
 /**
  * 业务异常
  */
+@Getter
 public class ServiceException extends RuntimeException {
 
-    private int code;
+    private static final long serialVersionUID = 4433467257027780978L;
 
-    private String msg;
+    private final int code;
 
-    public int getCode() {
-        return code;
-    }
+    private final String msg;
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 
     public ServiceException(String msg) {
         this.code = CommonExceptionEnum.ERROR500.getCode();
@@ -37,4 +26,5 @@ public class ServiceException extends RuntimeException {
         this.code = code;
         this.msg = msg;
     }
+
 }
