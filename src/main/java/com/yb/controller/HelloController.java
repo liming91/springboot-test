@@ -11,15 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequiredArgsConstructor
 public class HelloController {
-
-
     @ResponseBody
     @RequestMapping("/hello")
     public String hello() {
         log.info("hello word!");
         return "hello word!";
     }
-
-
 
 }
