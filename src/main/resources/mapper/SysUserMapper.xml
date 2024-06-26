@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yb.mapper.SysUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.yb.entity.SysUser">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="realName" column="real_name" jdbcType="VARCHAR"/>
+            <result property="sex" column="sex" jdbcType="TINYINT"/>
+            <result property="birthDate" column="birth_date" jdbcType="DATE"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="TINYINT"/>
+            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="createById" column="create_by_id" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createByName" column="create_by_name" jdbcType="VARCHAR"/>
+            <result property="updateById" column="update_by_id" jdbcType="BIGINT"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="updateByName" column="update_by_name" jdbcType="VARCHAR"/>
+            <result property="deleted" column="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_name,password,
+        real_name,sex,birth_date,
+        phone,type,avatar,
+        address,create_by_id,create_time,
+        create_by_name,update_by_id,update_time,
+        update_by_name,deleted
+    </sql>
+</mapper>
