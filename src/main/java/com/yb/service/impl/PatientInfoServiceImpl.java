@@ -1,10 +1,9 @@
 package com.yb.service.impl;
 
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yb.entity.PatientInfo;
 import com.yb.entity.PatientQuestion;
@@ -15,6 +14,7 @@ import com.yb.service.PatientInfoService;
 import com.yb.mapper.PatientInfoMapper;
 import com.yb.service.PatientQuestionService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -41,6 +41,7 @@ public class PatientInfoServiceImpl extends ServiceImpl<PatientInfoMapper, Patie
         int rows;
         JSONObject ocrModel = jsonObject.getJSONObject("ocrModel");
         Long id = ocrModel.getLong("id");//患者id
+
         String hospitalizationNumber = ocrModel.getString("hospitalizationNumber");//住院号
         String surgicalName = ocrModel.getString("name");//手术名称
         String patientName = ocrModel.getString("patientName");//患者姓名
@@ -60,14 +61,31 @@ public class PatientInfoServiceImpl extends ServiceImpl<PatientInfoMapper, Patie
             patientInfo.setDepartment(department);
             patientInfo.setCheckTime(checkTime);
             patientInfo.setCreateTime(new Date());
-            rows = this.baseMapper.insert(patientInfo);
-
-            //问题数据入库
-            PatientQuestion patientQuestion = new PatientQuestion();
-            patientQuestion.setPatientId(id);
-            patientQuestion.setQuestion(jsonObject);
-            patientQuestion.setCreateTime(new Date());
-            patientQuestionService.save(patientQuestion);
+            Integer count = this.baseMapper.selectCount(new LambdaQueryWrapper<PatientInfo>().eq(PatientInfo::getPatientId, id));
+            if (count == 0) {
+                rows = this.baseMapper.insert(patientInfo);
+                //问题数据入库
+                PatientQuestion patientQuestion = new PatientQuestion();
+                patientQuestion.setPatientId(id);
+                patientQuestion.setQuestion(jsonObject);
+                patientQuestion.setCreateTime(new Date());
+                patientQuestionService.save(patientQuestion);
+            } else {
+                rows = this.baseMapper.update(null, new LambdaUpdateWrapper<PatientInfo>()
+                        .set(PatientInfo::getHospitalizationNumber, hospitalizationNumber)
+                        .set(PatientInfo::getPatientName, patientName)
+                        .set(PatientInfo::getSurgicalName, surgicalName)
+                        .set(PatientInfo::getSurgicalRoom, surgicalRoom)
+                        .set(PatientInfo::getSurgicalTime, DateUtil.parse(surgicalTime))
+                        .set(PatientInfo::getDepartment, department)
+                        .set(PatientInfo::getCheckTime, checkTime)
+                        .set(PatientInfo::getCreateTime, new Date())
+                        .eq(PatientInfo::getPatientId, id));
+                patientQuestionService.update(new LambdaUpdateWrapper<PatientQuestion>()
+                        .set(PatientQuestion::getQuestion, jsonObject.toJSONString())
+                        .set(PatientQuestion::getCreateTime, new Date())
+                        .eq(PatientQuestion::getPatientId, id));
+            }
 
         } catch (Exception e) {
             log.error("手术信息异常:", e);
@@ -82,8 +100,8 @@ public class PatientInfoServiceImpl extends ServiceImpl<PatientInfoMapper, Patie
     public List<PatientInfoVo> getPatientInfo(PatientInfoQuery patientInfoQuery) {
         List<PatientInfoVo> patientInfo = this.baseMapper.getPatientInfo(patientInfoQuery);
         List<PatientInfoVo> collect = patientInfo.stream().distinct().collect(Collectors.toList());
-        if(!CollectionUtils.isEmpty(collect)){
-            collect.forEach(x->{
+        if (!CollectionUtils.isEmpty(collect)) {
+            collect.forEach(x -> {
                 PatientQuestion patientQuestion = patientQuestionService.getOne(new LambdaQueryWrapper<PatientQuestion>()
                         .eq(PatientQuestion::getPatientId, x.getPatientId()));
                 x.setPatientQuestion(patientQuestion);

@@ -70,4 +70,5 @@ public class PatientInfo implements Serializable {
      */
     private Date createTime;
 
+
 }
