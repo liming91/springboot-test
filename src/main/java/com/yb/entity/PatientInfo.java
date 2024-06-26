@@ -4,15 +4,18 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.util.Date;
+
 import lombok.Data;
 
 /**
  * 患者信息
+ *
  * @TableName patient_info
  */
-@TableName(value ="patient_info")
+@TableName(value = "patient_info")
 @Data
 public class PatientInfo implements Serializable {
 

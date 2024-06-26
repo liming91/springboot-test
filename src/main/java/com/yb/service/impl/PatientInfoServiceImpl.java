@@ -91,7 +91,6 @@ public class PatientInfoServiceImpl extends ServiceImpl<PatientInfoMapper, Patie
             log.error("手术信息异常:", e);
             throw new ServiceException("安卓患者信息入库异常");
         }
-
         return rows;
     }
 
