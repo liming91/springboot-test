@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "登陆")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/login")
+@RequestMapping("/system")
 public class LoginController {
 
     private final SysUserService sysUserService;
